@@ -23,3 +23,10 @@ logs/
 # Root Docker local persistence if any
 postgres_data/
 redis_data/
+
+# AI Agent Configs & Prompts
+AGENTS.md
+CLAUDE.md
+*.cursorrules
+.windsurfrules
+.copilot*
