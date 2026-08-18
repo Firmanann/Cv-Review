@@ -1,0 +1,25 @@
+# IDE & Editor Configs
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Sensitive environment & credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Root Docker local persistence if any
+postgres_data/
+redis_data/
