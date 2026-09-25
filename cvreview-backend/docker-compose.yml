@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   #Container Redis
   redis:
     image: redis:alpine
@@ -11,21 +12,5 @@ services:
     volumes:
       - redis_data:/data
 
-  #Container PostgreSQL
-  postgres:
-    image: postgres:16-alpine
-    container_name: cvreview-postgres
-    restart: always
-    environment:
-      POSTGRES_DB: cvreview_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgresmann
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-
 volumes:
   redis_data:
-  postgres_data:

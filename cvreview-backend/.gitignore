@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Documentation & Internal Docs ###
+docs/
+*.pdf
+
 ### Sensitive Properties & Secrets ###
 src/main/resources/application.properties
 src/main/resources/application-*.properties
@@ -12,6 +16,12 @@ src/main/resources/application-*.properties
 .env.*
 *.key
 *.pem
+*.p12
+*.jks
+
+### Docker Data Persistence ###
+redis_data/
+postgres_data/
 
 ### STS ###
 .apt_generated
@@ -23,7 +33,7 @@ src/main/resources/application-*.properties
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -41,6 +51,21 @@ build/
 ### VS Code ###
 .vscode/
 
-### Logs ###
+### Logs & Temp ###
 logs/
 *.log
+*.log.*
+hs_err_pid*
+replay_pid*
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+
+### AI Agent Configs ###
+.kilo/
+AGENTS.md
+CLAUDE.md
+*.cursorrules
+.windsurfrules
+.copilot*

@@ -1,8 +1,5 @@
 package com.mann.cvreview.util.exception;
 
-import lombok.Getter;
-
-@Getter
 public class BusinessException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -15,5 +12,9 @@ public class BusinessException extends RuntimeException {
     public BusinessException(ErrorCode errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }

@@ -4,11 +4,6 @@ import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
@@ -17,10 +12,45 @@ public class ApiResponse<T> {
     private T data;
     private Instant timestamp;
 
+    public ApiResponse() {
+    }
+
     public ApiResponse(boolean success, String message, T data, Instant timestamp) {
         this.success = success;
         this.message = message;
         this.data = data;
+        this.timestamp = timestamp;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

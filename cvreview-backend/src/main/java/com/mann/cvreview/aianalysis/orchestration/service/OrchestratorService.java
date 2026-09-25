@@ -46,28 +46,28 @@ public class OrchestratorService {
 
     public AnalysisResponse process(MultipartFile file, String jobDescription, String clientKey) {
 
-        // 1. Enforce rate limit per client IP
+        //Rate limit process
         rateLimitService.checkLimit(clientKey);
 
-        // 2. Validate uploaded file and job description
+        //validate data
         fileValidationService.validate(file, jobDescription);
 
-        // 3. Extract raw text and structural info from PDF/DOCX
+        //Extract raw text and structural file
         ExtractedContent extractedContent = textExtractionService.extract(file);
 
-        // 4. Evaluate layout and font compliance (ATS parsing gate)
+        //Evaluate layout and font compliance
         ParsingResult parsingResult = parsingService.evaluate(
                 extractedContent.structuralInfo(),
                 extractedContent.rawText()
         );
 
-        // 5. Perform semantic and keyword analysis via Groq AI
+        //Perform semantic and keyword analysis via Groq AI
         AiAnalysisResult aiResult = aiAnalysisService.analyze(
                 extractedContent.rawText(),
                 jobDescription
         );
 
-        // 6. Calculate weighted total score from all sub-scores
+        //Calculate weighted total score from all sub-scores
         int totalScore = scoringService.calculateTotalScore(
                 parsingResult.parsingScore(),
                 aiResult.keywordScore(),
@@ -77,14 +77,14 @@ public class OrchestratorService {
         boolean isCritical = scoringService.isCriticalParsingScore(parsingResult.parsingScore());
         String criticalWarning = scoringService.buildCriticalWarning(parsingResult.parsingScore());
 
-        // Merge all issues from layout parsing and keyword analysis
+        //Merge all issues from layout parsing and keyword analysis
         List<Issue> allIssues = new ArrayList<>();
         allIssues.addAll(parsingResult.issues());
         if (aiResult.keywordIssues() != null) {
             allIssues.addAll(aiResult.keywordIssues());
         }
 
-        // 7. Build and return the final analysis response DTO
+        //Build and return the final analysis response DTO
         return new AnalysisResponse(
                 totalScore,
                 parsingResult.parsingScore(),

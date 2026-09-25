@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mann.cvreview.aianalysis.ai.dto.AiAnalysisResult;
 import com.mann.cvreview.aianalysis.ai.exception.AiResponseParsingException;
 import com.mann.cvreview.util.config.ParsingConfig;
+import com.mann.cvreview.util.exception.BusinessException;
+import com.mann.cvreview.util.exception.ErrorCode;
 
 @Service
 public class AiAnalysisService {
@@ -167,17 +169,17 @@ public class AiAnalysisService {
         // 2. Mask URLs and social profile links (LinkedIn, GitHub, portfolio, etc.)
         result = URL_PATTERN.matcher(result).replaceAll("[PROFIL_URL]");
 
-        // 3. Mask phone numbers (Indonesian and international formats)
+        // 3. Mask Indonesian NIK / KTP number (16-digit)
+        result = NIK_PATTERN.matcher(result).replaceAll("[NIK]");
+
+        // 4. Mask phone numbers (Indonesian and international formats)
         result = PHONE_PATTERN.matcher(result).replaceAll("[NOMOR_TELEPON]");
 
-        // 4. Mask Indonesian street addresses (heuristic based on address keywords)
+        // 5. Mask Indonesian street addresses (heuristic based on address keywords)
         result = ADDRESS_PATTERN.matcher(result).replaceAll("[ALAMAT]");
 
-        // 5. Mask dates of birth
+        // 6. Mask dates of birth
         result = DOB_PATTERN.matcher(result).replaceAll("[TANGGAL_LAHIR]");
-
-        // 6. Mask Indonesian NIK / KTP number (16-digit)
-        result = NIK_PATTERN.matcher(result).replaceAll("[NIK]");
 
         return result;
     }
@@ -276,9 +278,11 @@ public class AiAnalysisService {
                     return (String) message.get("content");
                 }
             }
-            throw new RuntimeException("Empty response from Groq API");
+            throw new BusinessException(ErrorCode.AI_SERVICE_ERROR, "Empty response from Groq API");
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to contact Groq API: " + e.getMessage(), e);
+            throw new BusinessException(ErrorCode.AI_SERVICE_ERROR, "Failed to contact Groq API");
         }
     }
 

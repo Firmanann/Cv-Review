@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*")
 public class OrchestratorController {
 
-    // Dependency injection for orchestrator service
+    //DI orchestrator service
     private final com.mann.cvreview.aianalysis.orchestration.service.OrchestratorService orchestrator;
 
     public OrchestratorController(com.mann.cvreview.aianalysis.orchestration.service.OrchestratorService orchestrator) {
@@ -29,7 +29,7 @@ public class OrchestratorController {
     @PostMapping(value = "/analyze", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AnalysisResponse> analyzeCv(@Valid @ModelAttribute UserInput requestDto, HttpServletRequest request) {
 
-        // Resolve client IP address for rate limiting
+        //take user ip address
         String clientKey = resolveClientKey(request);
 
         // Execute full analysis pipeline through orchestrator
@@ -42,8 +42,11 @@ public class OrchestratorController {
         return ResponseEntity.ok(response);
     }
 
+    //take user ip
     private String resolveClientKey(HttpServletRequest request) {
+
         String xForwardedFor = request.getHeader("X-Forwarded-For");
+
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
             return xForwardedFor.split(",")[0].trim();
         }

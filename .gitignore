@@ -9,9 +9,12 @@
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs & Temp
 logs/
 *.log
+*.log.*
+hs_err_pid*
+replay_pid*
 
 # Sensitive environment & credentials
 .env
@@ -19,10 +22,25 @@ logs/
 !.env.example
 *.key
 *.pem
+*.p12
+*.jks
 
-# Root Docker local persistence if any
+# Docker local persistence
 postgres_data/
 redis_data/
+
+# Documentation (Internal docs excluded from VCS)
+docs/
+**/docs/
+*.pdf
+
+# Backend build targets & secrets
+target/
+**/target/
+src/main/resources/application.properties
+**/src/main/resources/application.properties
+**/src/main/resources/application-*.properties
+!**/src/main/resources/application.properties.example
 
 # AI Agent Configs & Prompts
 AGENTS.md
@@ -30,3 +48,4 @@ CLAUDE.md
 *.cursorrules
 .windsurfrules
 .copilot*
+.kilo/

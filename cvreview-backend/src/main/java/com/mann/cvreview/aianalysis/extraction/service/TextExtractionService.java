@@ -77,8 +77,8 @@ public class TextExtractionService {
 
     // Extract text content and structure from DOCX using Apache POI
     private ExtractedContent extractFromDocx(MultipartFile file) throws IOException {
-        try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {
-            XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+        try (XWPFDocument document = new XWPFDocument(file.getInputStream());
+             XWPFWordExtractor extractor = new XWPFWordExtractor(document)) {
             String rawText = extractor.getText();
 
             StructuralInfo info = analyzeDocxStructure(document, rawText);
@@ -94,6 +94,7 @@ public class TextExtractionService {
         for (PDPage page : document.getPages()) {
             PDResources resources = page.getResources();
             if (resources != null) {
+                
                 // 1. Extract font names
                 for (COSName fontName : resources.getFontNames()) {
                     try {

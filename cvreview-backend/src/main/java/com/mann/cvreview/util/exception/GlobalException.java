@@ -2,9 +2,12 @@ package com.mann.cvreview.util.exception;
 
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,11 +18,10 @@ import com.mann.cvreview.aianalysis.filevalidation.exception.InvalidInputExcepti
 import com.mann.cvreview.ratelimit.exception.RateLimitExceededException;
 import com.mann.cvreview.util.response.ApiResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestControllerAdvice
 public class GlobalException {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalException.class);
 
     // 1. Tangani Semua Business Exception (Logika Bisnis Custom)
     @ExceptionHandler(BusinessException.class)
@@ -31,11 +33,15 @@ public class GlobalException {
     }
 
     // 2. Tangani Error Validasi DTO (@Valid / @NotBlank / @Email / dsb)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException e) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(BindException e) {
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
+
+        if (errorMessage.isBlank()) {
+            errorMessage = ErrorCode.VALIDATION_ERROR.getMessage();
+        }
 
         log.warn("Validation failed: {}", errorMessage);
         return ResponseEntity
